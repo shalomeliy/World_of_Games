@@ -1,21 +1,21 @@
-<<<<<<< HEAD
+
 # This flask creates a server and client (web) for the app
 from flask import Flask
 import utils
 
-=======
+
 from flask import Flask, request
 import utils
 
 
 # This flask creates a server and client (web) for the app
->>>>>>> origin/main
+
 app = Flask(__name__)
 
 
 @app.route("/")
 def score_server():
-<<<<<<< HEAD
+
     try:
         with open('scores.txt', 'r') as file:
             score = file.read()
@@ -42,7 +42,7 @@ def score_server():
                 </body>
             </html>
         """
-=======
+
     file = open('scores.txt')
     if request.get(app) == '200':
         return f"""<html>
@@ -66,8 +66,9 @@ def score_server():
                     </body>
                 </html>
                 """
->>>>>>> origin/main
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
