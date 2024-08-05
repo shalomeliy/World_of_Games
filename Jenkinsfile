@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean UP') {
+        stage('Clean Up') {
             steps {
                 deleteDir()
             }
@@ -19,6 +19,18 @@ pipeline {
                     } else {
                         bat "git clone https://github.com/shalomeliy/World_of_Games.git"
                     }
+                }
+            }
+        }
+        stage('Print Disk Space') {
+            steps {
+                script {
+                    def scriptText = '''
+                    $disk = Get-PSDrive -Name C
+                    Write-Output "Free space on C: $([math]::round($disk.Free/1GB, 2)) GB"
+                    '''
+                    writeFile file: 'diskfree.ps1', text: scriptText
+                    bat 'powershell.exe -File diskfree.ps1'
                 }
             }
         }
@@ -52,15 +64,12 @@ pipeline {
             steps {
                 dir('World_of_Games') {
                     script {
-                        try {
+                        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                             if (isUnix()) {
                                 sh 'python e2e.py'
                             } else {
                                 bat 'python e2e.py'
                             }
-                        } catch (Exception e) {
-                            currentBuild.result = 'FAILURE'
-                            error('Tests failed.')
                         }
                     }
                 }
