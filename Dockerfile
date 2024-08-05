@@ -6,6 +6,8 @@ WORKDIR /app
 
 # Run flask library
 RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade selenium webdriver-manager
+
 
 # Copy all Python files from the current directory to the container
 COPY *.py /app
