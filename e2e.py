@@ -5,6 +5,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+
+
 def test_scores_service():
     chrome_options = Options()
     # Add any options you want to configure
@@ -12,6 +14,7 @@ def test_scores_service():
 
     # Automatically download and manage ChromeDriver
     service = Service(ChromeDriverManager().install())
+    print(f"ChromeDriver path: {ChromeDriverManager().install()}")
 
     try:
         # Initialize WebDriver with the managed ChromeDriver
