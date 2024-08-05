@@ -5,7 +5,7 @@ FROM python:alpine
 WORKDIR /app
 
 # Run flask library
-RUN pip install -r requirements.txt
+# RUN pip install -r requirements.txt
 
 # Copy all Python files from the current directory to the container
 COPY *.py /app
