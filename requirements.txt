@@ -1,3 +1,4 @@
 flask
 webdriver-manager
 selenium
+chromedriver
