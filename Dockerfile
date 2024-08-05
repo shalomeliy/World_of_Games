@@ -5,7 +5,7 @@ FROM python:alpine
 WORKDIR /app
 
 # Run flask library
-RUN python.exe -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade pip
 
 # Copy all Python files from the current directory to the container
 COPY *.py /app
