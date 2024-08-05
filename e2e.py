@@ -32,18 +32,4 @@ def main_function():
 
 
 if __name__ == "__main__":
-main_function()
-
-
-
-
-
-
-#
-#
-# def test_scores_service()
-#
-#
-# def main_function():
-#     while True:
-#         test_scores_service()
+    main_function()
