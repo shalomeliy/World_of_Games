@@ -25,12 +25,16 @@ pipeline {
         stage('Print Disk Space') {
             steps {
                 script {
-                    def scriptText = '''
-                    $disk = Get-PSDrive -Name C
-                    Write-Output "Free space on C: $([math]::round($disk.Free/1GB, 2)) GB"
-                    '''
-                    writeFile file: 'diskfree.ps1', text: scriptText
-                    bat 'powershell.exe -File diskfree.ps1'
+                    if (!isUnix()) {
+                        def scriptText = '''
+                        $disk = Get-PSDrive -Name C
+                        Write-Output "Free space on C: $([math]::round($disk.Free/1GB, 2)) GB"
+                        '''
+                        writeFile file: 'diskfree.ps1', text: scriptText
+                        bat 'powershell.exe -File diskfree.ps1'
+                    } else {
+                        sh 'df -h'
+                    }
                 }
             }
         }
@@ -49,7 +53,7 @@ pipeline {
         }
         stage('Build Docker') {
             steps {
-                dir('World_of_Games') {
+                dir('World_of_Games') { // Adjusted path to root where docker-compose.yml is expected to be
                     script {
                         if (isUnix()) {
                             sh "docker-compose up --build -d"
@@ -77,7 +81,7 @@ pipeline {
         }
         stage('Finalize') {
             steps {
-                dir('World_of_Games') {
+                dir('World_of_Games') { // Adjusted path to root where docker-compose.yml is expected to be
                     script {
                         if (isUnix()) {
                             sh 'docker-compose down'
