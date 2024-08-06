@@ -53,42 +53,47 @@ pipeline {
         }
         stage('Build Docker') {
             steps {
-                dir('World_of_Games') { // Adjusted path to root where docker-compose.yml is expected to be
+                dir('World_of_Games') {
                     script {
                         if (isUnix()) {
                             sh "docker-compose up --build -d"
+                            sh "docker tag main_score:1.0 $DOCKER_IMAGE"
                         } else {
                             bat "docker-compose up --build -d"
+                            bat "docker tag main_score:1.0 %DOCKER_IMAGE%"
                         }
                     }
                 }
             }
         }
         stage('E2E Test') {
-            steps {
-                dir('World_of_Games') {
-                    script {
-                        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                            if (isUnix()) {
-                                sh 'python e2e.py'
-                            } else {
-                                bat 'python e2e.py'
-                            }
-                        }
+    steps {
+        dir('World_of_Games') {
+            script {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    if (isUnix()) {
+                        sh 'python e2e.py'
+                    } else {
+                        bat 'python e2e.py'
+                        echo 'Printing ChromeDriver Path for debugging:'
+                        bat 'echo %PATH%'
                     }
                 }
             }
         }
+    }
+}
+
         stage('Finalize') {
             steps {
-                dir('World_of_Games') { // Adjusted path to root where docker-compose.yml is expected to be
+                dir('World_of_Games') {
                     script {
                         if (isUnix()) {
                             sh 'docker-compose down'
                             sh "docker push $DOCKER_IMAGE"
                         } else {
                             bat 'docker-compose down'
-                            bat "docker push $DOCKER_IMAGE"
+                            bat "docker push %DOCKER_IMAGE%"
                         }
                     }
                 }
