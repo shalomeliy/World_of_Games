@@ -1,5 +1,4 @@
 import sys
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -11,7 +10,7 @@ def test_scores_service():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # Set the path to the ChromeDriver installed in the Docker container
+    # Use the ChromeDriver installed in the Docker container
     service = Service("/usr/bin/chromedriver")
 
     try:
