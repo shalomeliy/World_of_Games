@@ -5,16 +5,14 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
-
-
 def test_scores_service():
     chrome_options = Options()
-    # Add any options you want to configure
-    # For example: chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # Automatically download and manage ChromeDriver
-    service = Service(ChromeDriverManager().install())
-    print(f"ChromeDriver path: {ChromeDriverManager().install()}")
+    # Set the path to the ChromeDriver installed in the Docker container
+    service = Service("/usr/bin/chromedriver")
 
     try:
         # Initialize WebDriver with the managed ChromeDriver
