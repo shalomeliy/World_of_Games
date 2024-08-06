@@ -7,11 +7,11 @@ WORKDIR /app
 # Upgrade pip and install necessary libraries
 RUN python3 -m pip install --upgrade pip \
     && python3 -m pip install selenium webdriver-manager \
-    && apk add --no-cache chromium
+    && apk add --no-cache chromium chromium-chromedriver
 
 # Set environment variables for Chromium
-ENV CHROME_BIN=/usr/bin/chromium-browser \
-    CHROME_DRIVER_VERSION=latest
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROME_DRIVER=/usr/bin/chromedriver
 
 # Copy all Python files from the current directory to the container
 COPY *.py /app
@@ -21,5 +21,3 @@ EXPOSE 8777
 
 # Specify the command to run on container start
 CMD ["python", "./main_score.py"]
-
-
