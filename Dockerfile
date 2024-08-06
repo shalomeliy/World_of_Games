@@ -4,10 +4,11 @@ FROM python:3.12-alpine
 # Set the working directory in the container
 WORKDIR /app
 
-# Upgrade pip and install necessary libraries
-RUN python3 -m pip install --upgrade pip \
-    && python3 -m pip install selenium webdriver-manager \
-    && apk add --no-cache chromium chromium-chromedriver
+# Install Chromium and ChromeDriver
+RUN apk add --no-cache chromium chromium-chromedriver
+
+# Install pip and necessary Python packages
+RUN python3 -m pip install --upgrade pip selenium
 
 # Set environment variables for Chromium
 ENV CHROME_BIN=/usr/bin/chromium-browser
