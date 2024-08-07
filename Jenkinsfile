@@ -58,7 +58,7 @@ pipeline {
                         if (isUnix()) {
                             sh "docker-compose up --build -d"
                         } else {
-                            bat "docker-compose up --build -d"
+                            bat "docke-compose up --build -d"
                         }
                     }
                 }
