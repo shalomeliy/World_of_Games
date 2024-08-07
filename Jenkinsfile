@@ -85,10 +85,10 @@ pipeline {
                     script {
                         if (isUnix()) {
                             sh 'docker-compose down'
-                            sh "docke push $DOCKER_IMAGE"
+                            sh "docker push $DOCKER_IMAGE"
                         } else {
                             bat 'docker-compose down'
-                            bat "docke push $DOCKER_IMAGE"
+                            bat "docker push $DOCKER_IMAGE"
                         }
                     }
                 }
