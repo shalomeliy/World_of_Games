@@ -66,11 +66,13 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: '1978', url: '']) {
-                    if (isUnix()) {
-                        sh "docker push $DOCKER_IMAGE"
-                    } else {
-                        bat "docker push $DOCKER_IMAGE"
+                script {
+                    withDockerRegistry([credentialsId: '1978', url: '']) {
+                        if (isUnix()) {
+                            sh "docker push $DOCKER_IMAGE"
+                        } else {
+                            bat "docker push $DOCKER_IMAGE"
+                        }
                     }
                 }
             }
