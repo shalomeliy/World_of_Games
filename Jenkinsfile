@@ -67,7 +67,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry([credentialsId: 'shalomeli', url: '']) {
+                    withDockerRegistry([credentialsId: '1978', url: '']) {
                         if (isUnix()) {
                             sh "docker push $DOCKER_IMAGE"
                         } else {
