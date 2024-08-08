@@ -35,10 +35,10 @@ def select_game():
         for game in games:
             print(game, '\n')
         s_game = input()
-        if s_game.isnumeric() and 1 <= int(s_game) <= len(games) + 1:
+        if s_game.isnumeric() and 1 <= int(s_game) <= len(games):
             return int(s_game)
         else:
-            print(f"\nInvalid input. Please select a game number between 1 and {len(games) + 1}.\n")
+            print(f"\nInvalid input. Please select a game number between 1 and {len(games)}.\n")
 
       
 
@@ -77,5 +77,5 @@ def start_play(user_name):
 
 
 # example usage
-# user_name = welcome()
-# start_play(user_name)
+#user_name = welcome()
+#start_play(user_name)
