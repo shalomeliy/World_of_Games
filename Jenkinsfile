@@ -64,19 +64,19 @@ pipeline {
                 }
             }
         }
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    withDockerRegistry([credentialsId: 'shalomeli/Se291178!', url: '']) {
-                        if (isUnix()) {
-                            sh "docker push $DOCKER_IMAGE"
-                        } else {
-                            bat "docker push $DOCKER_IMAGE"
-                        }
-                    }
-                }
-            }
-        }
+ //      stage('Push Docker Image') {
+ //           steps {
+ //               script {
+ //                   withDockerRegistry([credentialsId: 'shalomeli/Se291178!', url: '']) {
+    //                      if (isUnix()) {
+     //                       sh "docker push $DOCKER_IMAGE"
+      //                  } else {
+     //                       bat "docker push $DOCKER_IMAGE"
+     //                   }
+    //                }
+   //             }
+   //         }
+   //     }
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
