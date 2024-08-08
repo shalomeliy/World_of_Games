@@ -64,6 +64,15 @@ pipeline {
                 }
             }
         }
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry([credentialsId: 'your-docker-credentials-id', url: '']) {
+                    sh 'docker push shalomeliy/main_score:1.0'
+                }
+            }
+        }
+    }
+}
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
