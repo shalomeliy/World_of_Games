@@ -4,6 +4,9 @@ FROM python:3.12-alpine
 # Set the working directory in the container
 WORKDIR /app
 
+# Install flask
+RUN pip install flask
+
 # Install Chromium and ChromeDriver
 RUN apk add --no-cache \
     chromium \
