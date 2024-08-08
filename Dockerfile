@@ -23,4 +23,4 @@ COPY *.py /app
 EXPOSE 8777
 
 # Specify the command to run on container start
-CMD ["python", "./main_score.py"]
+CMD python ./app/main_score.py
