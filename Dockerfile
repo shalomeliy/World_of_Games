@@ -16,8 +16,8 @@ RUN apk add --no-cache \
 RUN python3 -m pip install --upgrade pip selenium
 
 # Set environment variables for Chromium
-ENV CHROME_BIN=/usr/bin/chromium-browser
-ENV CHROME_DRIVER=/usr/bin/chromedriver
+ENV CHROME_BIN=/usr/lib/chromium/chrome
+ENV CHROME_DRIVER=/usr/lib/chromium/chromedriver
 
 # Copy all Python files from the current directory to the container
 COPY *.py /app
