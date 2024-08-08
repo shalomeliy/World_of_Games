@@ -6,12 +6,13 @@ from selenium.webdriver.common.by import By
 
 def test_scores_service():
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode (without GUI)
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.binary_location = "/usr/lib/chromium/chrome"  # Path to Chromium in Docker container
 
     # Use the ChromeDriver installed in the Docker container
-    service = Service("/usr/bin/chromedriver")
+    service = Service("/usr/lib/chromium/chromedriver")  # Ensure this matches the Dockerfile
 
     try:
         # Initialize WebDriver with the managed ChromeDriver
