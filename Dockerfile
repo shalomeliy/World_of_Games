@@ -17,7 +17,7 @@ ENV CHROME_BIN=/usr/lib/chromium/chrome
 ENV CHROME_DRIVER=/usr/lib/chromium/chromedriver
 
 # Copy all Python files from the current directory to the container
-COPY main_score.py .
+COPY *.py .
 
 # External port
 EXPOSE 8777
