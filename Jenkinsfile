@@ -66,13 +66,15 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'your-docker-credentials-id', url: '']) {
-                    sh 'docker push shalomeliy/main_score:1.0'
+                withDockerRegistry([credentialsId: '1978', url: '']) {
+                    if (isUnix()) {
+                        sh "docker push $DOCKER_IMAGE"
+                    } else {
+                        bat "docker push $DOCKER_IMAGE"
+                    }
                 }
             }
         }
-    }
-}
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
@@ -94,10 +96,8 @@ pipeline {
                     script {
                         if (isUnix()) {
                             sh 'docker-compose down'
-                            sh "docker push $DOCKER_IMAGE"
                         } else {
                             bat 'docker-compose down'
-                            bat "docker push $DOCKER_IMAGE"
                         }
                     }
                 }
