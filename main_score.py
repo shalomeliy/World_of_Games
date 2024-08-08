@@ -1,9 +1,5 @@
 
 # This flask creates a server and client (web) for the app
-from flask import Flask
-import utils
-
-
 from flask import Flask, request
 import utils
 
