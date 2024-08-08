@@ -20,7 +20,7 @@ def welcome():
         print("What is your first name?")
         user_name = input()
         if user_name.isalpha():
-            print('Hi', user_name, 'and welcome to the World of Games: The Epic Journey\n')
+            print(f'Hi {user_name}, and welcome to the World of Games: The Epic Journey\n')
             return user_name
         else:
             print("Invalid input, Please enter a valid first name only\n")
@@ -34,21 +34,24 @@ def select_game():
         for game in games:
             print(game, '\n')
         s_game = input()
-        if not s_game.isnumeric() or int(s_game) < 1 or int(s_game) > len(games) + 1:
-            print("\nInvalid input, Please select a game number again from the list ", "1 -", len(games), '\n' * 3)
+        if s_game.isnumeric() and 1 <= int(s_game) <= len(games) + 1:
+            return int(s_game)
         else:
-            return s_game
+            print(f"\nInvalid input. Please select a game number between 1 and {len(games) + 1}.\n")
+
+      
+
 
 
 # This function collect the user difficulty level
 def select_difficult():
     while True:
-        print("Please select a difficulty level between 1-easy and 5-professional")
-        difficulty = input()
-        if not difficulty.isnumeric() or int(difficulty) < 1 or int(difficulty) > 5:
-            print("\nInvalid input, Please select difficulty again\n")
+        difficulty = input("Please select a difficulty level between 1 (easy) and 5 (professional): ")
+        if difficulty.isnumeric() and 1 <= int(difficulty) <= 5:
+            return int(difficulty)
         else:
-            return difficulty
+            print("\nInvalid input. Please select a difficulty level between 1 and 5.\n")
+
 
 
 # This function start the selected game and stored the winning points in the scores.txt file
@@ -56,21 +59,21 @@ def start_play(user_name):
     game = select_game()
     difficulty = select_difficult()
     print(f'Hello {user_name} and welcome to game: {game} selected difficult is: {difficulty}')
+   
     if int(game) == 1:
         memory_result = memory_game(int(difficulty))
-        if memory_result:
-            add_score(difficulty)
+        add_score(difficulty)
     elif int(game) == 2:
         guess_result = guess_game(difficulty)
-        if guess_result:
-            add_score(difficulty)
+        add_score(difficulty)
     elif int(game) == 3:
         roulette_result = currency_roulette_game(difficulty)
-        if roulette_result:
-            print(difficulty)
-            add_score(difficulty)
+        # print(difficulty) #for test
+        add_score(difficulty)
     else:
         print("See you next time player!")
+
+
 
 # example usage
 # user_name = welcome()
