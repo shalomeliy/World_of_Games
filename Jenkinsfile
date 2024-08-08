@@ -83,9 +83,9 @@ pipeline {
                     script {
                         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                             if (isUnix()) {
-                                sh 'python e2e.py'
+                                sh 'python tests/e2e.py'
                             } else {
-                                bat 'python e2e.py'
+                                bat 'python tests/e2e.py'
                             }
                         }
                     }
