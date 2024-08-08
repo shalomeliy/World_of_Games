@@ -1,74 +1,62 @@
+Here’s a professional and concise README for your repository:
 
-# World of Games: The Epic Journey
+---
 
+# World of Games
 
-Welcome to World of Games: The Epic Journey, a Python-based project offering
-a collection of fun and educational games. 
-The user will select a game by entering the corresponding number. After choosing a game,
-the function will prompt the user to select a difficulty level between 1 and 5.
+Welcome to **World of Games**—a Python-based game application designed for entertainment and skill testing. The application includes a variety of mini-games, score management, and a web interface to view scores.
 
+## Features
 
-  
+- **Multiple Mini-Games**: Enjoy a collection of interactive games that challenge different skills.
+- **Score Management**: Automatically records and manages scores for each game.
+- **Web Interface**: A simple Flask-based web application to display current scores.
+- **End-to-End Testing**: Integrated E2E testing using Selenium for a robust gaming experience.
+- **Dockerized Deployment**: Easy deployment with Docker and Docker Compose.
 
-**Author: Shalom Eliyahu**  
-**Title: DEVOPS**
+## Installation
 
+Clone the repository:
+```bash
+git clone https://github.com/shalomeliy/World_of_Games.git
+cd World_of_Games
+```
 
-# 🧩 World of Games 
+Install the required Python packages:
+```bash
+pip install -r requirements.txt
+```
 
-## **1. Memory Game**
-####    Description: Test your memory by recalling sequences of numbers.
-####                 A sequence of numbers will appear for 1 second and you have to guess it.
-<img src="https://i.ytimg.com/vi/vfnyXiKZftc/maxresdefault.jpg" width=400 height=180/>
+## Running the Application
 
+To start the web server:
+```bash
+python main_score.py
+```
 
+Access the application via your browser:
+```
+http://127.0.0.1:8777/
+```
 
+## Testing
 
-    
-## **2. Guess Game**
-####    Description: Exercise your intuition by guessing hidden numbers.
-####    Guess a number and see if you guessed the same as the computer.
-<img src="https://t4.ftcdn.net/jpg/05/28/90/61/360_F_528906125_hIJGjopyvcymzICiHiwL1ne4kuMezhQn.jpg" width=400 height=180/>
+Run end-to-end tests with:
+```bash
+python e2e.py
+```
 
+## Docker
 
- 
-## **3. Currency Roulette**
-####    Description: Challenge your financial acumen by guessing currency values.
-####    Try and guess the value of a random amount of USD in ILS
-<img src="https://media.tenor.com/eFt5IXNkP-UAAAAM/you-think-i-dont-know-math-math.gif" width=400 height=180/>
+To build and run the application using Docker:
+```bash
+docker-compose up --build
+```
 
+## Contributing
 
+Contributions are welcome! Please fork this repository and submit a pull request.
 
-## ⚙️ System Requirements
-- Python 3.x
-- Package managers: `pip`, `pipx`, `docker`
-- LLM services: `OpenAI`, `Ollama`, `Google Gemini`, `Offline Mode`
+---
 
- 
-
-### 🤖 Getting Started
-1. Clone the repository from [GitHub](https://github.com/shalomeliy/World_of_Games) or your preferred platform.
-2. Navigate to the project directory.
-3. Run the main script to start playing: /gettinStarted/main.py
-
-
-   
-### Game Selection
-Choose from the available games and select a difficulty level to begin playing.
- 
-## 📦 Configuration
-Customize game settings and preferences directly in the `config.py` file.
- 
-## 🔭 Roadmap
-Explore upcoming features and improvements planned for future releases.
- 
-## 🧑‍💻 Contributing
-We welcome contributions to enhance the project! Check out our [Contributing Guide](CONTRIBUTING.md) to get started.
- 
-## 🎗 License
-This project is licensed under the [MIT License](LICENSE).
-
-
-
-Enjoy your journey through the World of Games! For detailed instructions and technical support, refer to the project documentation included in the repository.
-
+Let me know if you need any changes!
