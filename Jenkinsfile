@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'shalomeliy/main_score'
+        DOCKER_IMAGE = 'shalomeliy/main_score:1.0'
     }
 
     stages {
@@ -22,7 +22,22 @@ pipeline {
                 }
             }
         }
-        
+        stage('Print Disk Space') {
+            steps {
+                script {
+                    if (!isUnix()) {
+                        def scriptText = '''
+                        $disk = Get-PSDrive -Name C
+                        Write-Output "Free space on C: $([math]::round($disk.Free/1GB, 2)) GB"
+                        '''
+                        writeFile file: 'diskfree.ps1', text: scriptText
+                        bat 'powershell.exe -File diskfree.ps1'
+                    } else {
+                        sh 'df -h'
+                    }
+                }
+            }
+        }
         stage('Install Requirements') {
             steps {
                 dir('World_of_Games') {
@@ -42,28 +57,22 @@ pipeline {
                     script {
                         if (isUnix()) {
                             sh "docker-compose up --build -d"
-                            // Tag the built image as latest
-                            sh "docker tag $DOCKER_IMAGE:1.0 $DOCKER_IMAGE:latest"
                         } else {
                             bat "docker-compose up --build -d"
-                            // Tag the built image as latest
-                            bat "docker tag $DOCKER_IMAGE:1.0 $DOCKER_IMAGE:latest"
                         }
                     }
                 }
             }
         }
-      
-
         stage('Tag & Push Docker Image') {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE:latest $NEW_IMAGE"
-                        sh "docker push $NEW_IMAGE"
+                        sh "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
+                        sh "docker push shalomeli/world_of_games:1.0"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE:latest $NEW_IMAGE"
-                        bat "docker push $NEW_IMAGE"
+                        bat "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
+                        bat "docker push shalomeli/world_of_games:1.0"
                     }
                 }
             }
