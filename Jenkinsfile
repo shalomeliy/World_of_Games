@@ -35,34 +35,14 @@ pipeline {
                 }
             }
         }
-        stage('Increment Version') {
+       stage('Increment Version') {
             steps {
                 dir('World_of_Games') {
                     script {
-                        def versionFile = 'version.txt'
-                        def version = ''
-
-                        // Read the version file
-                        if (isUnix()) {
-                            version = sh(script: "cat ${versionFile}", returnStdout: true).trim()
-                        } else {
-                            version = bat(script: "type ${versionFile}", returnStdout: true).trim()
-                        }
-
-                        // Increment the minor version
-                        def (major, minor) = version.tokenize('.')
-                        minor = (minor.toInteger() + 1).toString()
-                        version = "${major}.${minor}"
-
-                        // Write the new version back to the file
-                        if (isUnix()) {
-                            sh "echo ${version} > ${versionFile}"
-                        } else {
-                            bat "echo ${version} > ${versionFile}"
-                        }
-
-                        // Update the DOCKER_IMAGE environment variable
-                        env.DOCKER_IMAGE = "${DOCKER_IMAGE_BASE}:${version}"
+                        def versionFile = readFile 'version.txt'
+                        def versionNumber = versionFile.trim().toInteger()
+                        versionNumber += 1
+                        writeFile file: 'version.txt', text: versionNumber.toString()
                     }
                 }
             }
