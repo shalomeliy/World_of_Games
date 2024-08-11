@@ -67,12 +67,18 @@ pipeline {
         stage('Increment Docker Image Version') {
             steps {
                 script {
-                    def latestTag = sh(script: "docker images --format '{{.Tag}}' $DOCKER_IMAGE | sort -V | tail -n 1", returnStdout: true).trim()
-                    def newVersion = latestTag.tokenize('.').with { list ->
-                        list[-1] = (list[-1].toInteger() + 1).toString()
-                        list.join('.')
+                    // Tag the built image as latest
+                    def imageExists = sh(script: "docker images -q $DOCKER_IMAGE:latest", returnStdout: true).trim()
+                    if (imageExists) {
+                        def latestTag = sh(script: "docker images --format '{{.Tag}}' $DOCKER_IMAGE | sort -V | tail -n 1", returnStdout: true).trim()
+                        def newVersion = latestTag.tokenize('.').with { list ->
+                            list[-1] = (list[-1].toInteger() + 1).toString()
+                            list.join('.')
+                        }
+                        env.NEW_IMAGE = "${DOCKER_IMAGE}:${newVersion}"
+                    } else {
+                        error "Image with 'latest' tag does not exist. Cannot increment version."
                     }
-                    env.NEW_IMAGE = "${DOCKER_IMAGE}:${newVersion}"
                 }
             }
         }
