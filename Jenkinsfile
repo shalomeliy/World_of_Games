@@ -35,17 +35,26 @@ pipeline {
                 }
             }
         }
-        stage('Increment Version') {
+ stage('Read and Increment Build Number') {
             steps {
-                dir('World_of_Games') {
-                    script {
-                        def versionFile = readFile 'version.txt'
-                        def versionNumber = versionFile.trim().toInteger()
-                        versionNumber += 1
-                        writeFile file: 'version.txt', text: versionNumber.toString()
-                        env.VERSION = versionNumber.toString()
-                        env.DOCKER_IMAGE = "${DOCKER_IMAGE_BASE}:${env.VERSION}"
+                script {
+                    def versionsFile = 'World-Of-Games/version.txt'
+                    
+                    // Read the current build number
+                    def currentBuildNumber = 0
+                    if (fileExists(versionsFile)) {
+                        currentBuildNumber = readFile(versionsFile).trim().toInteger()
                     }
+                    
+                    // Increment the build number
+                    def newBuildNumber = currentBuildNumber + 1
+                    
+                    // Write the new build number back to the file
+                    writeFile file: versionsFile, text: "${newBuildNumber}"
+                    
+                    // Set the new build number as an environment variable for use in Docker tag
+                    env.BUILD_NUMBER = newBuildNumber.toString()
+                    env.IMAGE_TAG = newBuildNumber.toString()
                 }
             }
         }
@@ -62,21 +71,21 @@ pipeline {
                 }
             }
         }
-        stage('Tag & Push Docker Image') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh "docker tag ${DOCKER_IMAGE_BASE}:${env.VERSION} ${DOCKER_IMAGE_BASE}:latest"
-                        sh "docker push ${DOCKER_IMAGE_BASE}:${env.VERSION}"
-                        sh "docker push ${DOCKER_IMAGE_BASE}:latest"
-                    } else {
-                        bat "docker tag ${DOCKER_IMAGE_BASE}:${env.VERSION} ${DOCKER_IMAGE_BASE}:latest"
-                        bat "docker push ${DOCKER_IMAGE_BASE}:${env.VERSION}"
-                        bat "docker push ${DOCKER_IMAGE_BASE}:latest"
-                    }
-                }
-            }
-        }
+//        stage('Tag & Push Docker Image') {
+//            steps {
+//                script {
+//                    if (isUnix()) {
+//                        sh "docker tag ${DOCKER_IMAGE_BASE}:${env.VERSION} ${DOCKER_IMAGE_BASE}:latest"
+//                        sh "docker push ${DOCKER_IMAGE_BASE}:${env.VERSION}"
+//                        sh "docker push ${DOCKER_IMAGE_BASE}:latest"
+//                    } else {
+//                        bat "docker tag ${DOCKER_IMAGE_BASE}:${env.VERSION} ${DOCKER_IMAGE_BASE}:latest"
+//                        bat "docker push ${DOCKER_IMAGE_BASE}:${env.VERSION}"
+//                        bat "docker push ${DOCKER_IMAGE_BASE}:latest"
+//                    }
+//                }
+//            }
+//        }
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
