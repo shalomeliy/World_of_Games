@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_BASE = 'shalomeliy/world_of_games'
+        VERSION = '' // Initialize the version variable
     }
 
     stages {
@@ -35,7 +36,7 @@ pipeline {
                 }
             }
         }
-       stage('Increment Version') {
+        stage('Increment Version') {
             steps {
                 dir('World_of_Games') {
                     script {
@@ -43,6 +44,7 @@ pipeline {
                         def versionNumber = versionFile.trim().toInteger()
                         versionNumber += 1
                         writeFile file: 'version.txt', text: versionNumber.toString()
+                        env.VERSION = versionNumber.toString() // Save the version to environment variable
                     }
                 }
             }
@@ -63,14 +65,19 @@ pipeline {
         stage('Tag & Push Docker Image') {
             steps {
                 script {
+                    def dockerTag = "${DOCKER_IMAGE_BASE}:${env.VERSION}"
+                    def dockerLatestTag = "${DOCKER_IMAGE_BASE}:latest"
+
                     if (isUnix()) {
-                        sh "docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE_BASE}:latest"
-                        sh "docker push ${DOCKER_IMAGE}"
-                        sh "docker push ${DOCKER_IMAGE_BASE}:latest"
+                        sh "docker tag ${DOCKER_IMAGE_BASE} ${dockerTag}"
+                        sh "docker push ${dockerTag}"
+                        sh "docker tag ${DOCKER_IMAGE_BASE} ${dockerLatestTag}"
+                        sh "docker push ${dockerLatestTag}"
                     } else {
-                        bat "docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE_BASE}:latest"
-                        bat "docker push ${DOCKER_IMAGE}"
-                        bat "docker push ${DOCKER_IMAGE_BASE}:latest"
+                        bat "docker tag ${DOCKER_IMAGE_BASE} ${dockerTag}"
+                        bat "docker push ${dockerTag}"
+                        bat "docker tag ${DOCKER_IMAGE_BASE} ${dockerLatestTag}"
+                        bat "docker push ${dockerLatestTag}"
                     }
                 }
             }
