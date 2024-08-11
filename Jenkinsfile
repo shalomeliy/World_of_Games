@@ -41,7 +41,7 @@ pipeline {
         steps {
             script {
                 try {
-                    def response = sh(script: 'curl -s https://hub.docker.com/v2/repositories/shalomeliy/world_of_games/tags/', returnStdout: true).trim()
+                    def response = sh(script: 'curl -s https://hub.docker.com/v2/repositories/shalomeli/world_of_games/tags/', returnStdout: true).trim()
                     echo "Docker Hub response: ${response}"
                     def tags = readJSON(text: response)
                     def latestTag = tags.results[0]?.name ?: 'latest'
