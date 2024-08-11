@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'shalomeliy/main_score:1.0'
+        DOCKER_IMAGE = 'shalomeliy/main_score'
     }
 
     stages {
@@ -64,15 +64,27 @@ pipeline {
                 }
             }
         }
+        stage('Increment Docker Image Version') {
+            steps {
+                script {
+                    def latestTag = sh(script: "docker images --format '{{.Tag}}' $DOCKER_IMAGE | sort -V | tail -n 1", returnStdout: true).trim()
+                    def newVersion = latestTag.tokenize('.').with { list ->
+                        list[-1] = (list[-1].toInteger() + 1).toString()
+                        list.join('.')
+                    }
+                    env.NEW_IMAGE = "${DOCKER_IMAGE}:${newVersion}"
+                }
+            }
+        }
         stage('Tag & Push Docker Image') {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        sh "docker push shalomeli/world_of_games:1.0"
+                        sh "docker tag $DOCKER_IMAGE:latest $NEW_IMAGE"
+                        sh "docker push $NEW_IMAGE"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        bat "docker push shalomeli/world_of_games:1.0"
+                        bat "docker tag $DOCKER_IMAGE:latest $NEW_IMAGE"
+                        bat "docker push $NEW_IMAGE"
                     }
                 }
             }
