@@ -57,8 +57,12 @@ pipeline {
                     script {
                         if (isUnix()) {
                             sh "docker-compose up --build -d"
+                            // Tag the built image as latest
+                            sh "docker tag $DOCKER_IMAGE:1.0 $DOCKER_IMAGE:latest"
                         } else {
                             bat "docker-compose up --build -d"
+                            // Tag the built image as latest
+                            bat "docker tag $DOCKER_IMAGE:1.0 $DOCKER_IMAGE:latest"
                         }
                     }
                 }
@@ -67,7 +71,6 @@ pipeline {
         stage('Increment Docker Image Version') {
             steps {
                 script {
-                    // Tag the built image as latest
                     def imageExists = sh(script: "docker images -q $DOCKER_IMAGE:latest", returnStdout: true).trim()
                     if (imageExists) {
                         def latestTag = sh(script: "docker images --format '{{.Tag}}' $DOCKER_IMAGE | sort -V | tail -n 1", returnStdout: true).trim()
