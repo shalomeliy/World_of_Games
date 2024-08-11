@@ -68,23 +68,31 @@ pipeline {
                 }
             }
         }
-        stage('Increment Docker Image Version') {
-            steps {
-                script {
-                    def imageExists = sh(script: "docker images -q $DOCKER_IMAGE:latest", returnStdout: true).trim()
-                    if (imageExists) {
-                        def latestTag = sh(script: "docker images --format '{{.Tag}}' $DOCKER_IMAGE | sort -V | tail -n 1", returnStdout: true).trim()
-                        def newVersion = latestTag.tokenize('.').with { list ->
-                            list[-1] = (list[-1].toInteger() + 1).toString()
-                            list.join('.')
-                        }
-                        env.NEW_IMAGE = "${DOCKER_IMAGE}:${newVersion}"
-                    } else {
-                        error "Image with 'latest' tag does not exist. Cannot increment version."
+       stage('Increment Docker Image Version') {
+    steps {
+        script {
+            def imageExists = sh(script: "docker images -q $DOCKER_IMAGE:latest", returnStdout: true).trim()
+            if (imageExists) {
+                def tags = sh(script: "docker images --format '{{.Tag}}' $DOCKER_IMAGE", returnStdout: true).trim().split('\n')
+                def numericTags = tags.findAll { it.isInteger() }
+                
+                if (numericTags) {
+                    def latestTag = numericTags.sort { a, b -> a.toInteger() <=> b.toInteger() }.last()
+                    def newVersion = latestTag.tokenize('.').with { list ->
+                        list[-1] = (list[-1].toInteger() + 1).toString()
+                        list.join('.')
                     }
+                    env.NEW_IMAGE = "${DOCKER_IMAGE}:${newVersion}"
+                } else {
+                    error "No numeric tags found. Cannot increment version."
                 }
+            } else {
+                error "Image with 'latest' tag does not exist. Cannot increment version."
             }
         }
+    }
+}
+
         stage('Tag & Push Docker Image') {
             steps {
                 script {
