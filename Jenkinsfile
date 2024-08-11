@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_BASE = 'shalomeliy/world_of_games'
+        DOCKER_IMAGE = 'shalomeliy/main_score:1.0'
     }
 
     stages {
@@ -22,6 +22,7 @@ pipeline {
                 }
             }
         }
+ 
         stage('Install Requirements') {
             steps {
                 dir('World_of_Games') {
@@ -32,29 +33,6 @@ pipeline {
                             bat "pip install -r requirements.txt"
                         }
                     }
-                }
-            }
-        }
- stage('Read and Increment Build Number') {
-            steps {
-                script {
-                    def versionsFile = 'World-Of-Games/version.txt'
-                    
-                    // Read the current build number
-                    def currentBuildNumber = 0
-                    if (fileExists(versionsFile)) {
-                        currentBuildNumber = readFile(versionsFile).trim().toInteger()
-                    }
-                    
-                    // Increment the build number
-                    def newBuildNumber = currentBuildNumber + 1
-                    
-                    // Write the new build number back to the file
-                    writeFile file: versionsFile, text: "${newBuildNumber}"
-                    
-                    // Set the new build number as an environment variable for use in Docker tag
-                    env.BUILD_NUMBER = newBuildNumber.toString()
-                    env.IMAGE_TAG = newBuildNumber.toString()
                 }
             }
         }
@@ -71,21 +49,19 @@ pipeline {
                 }
             }
         }
-//        stage('Tag & Push Docker Image') {
-//            steps {
-//                script {
-//                    if (isUnix()) {
-//                        sh "docker tag ${DOCKER_IMAGE_BASE}:${env.VERSION} ${DOCKER_IMAGE_BASE}:latest"
-//                        sh "docker push ${DOCKER_IMAGE_BASE}:${env.VERSION}"
-//                        sh "docker push ${DOCKER_IMAGE_BASE}:latest"
-//                    } else {
-//                        bat "docker tag ${DOCKER_IMAGE_BASE}:${env.VERSION} ${DOCKER_IMAGE_BASE}:latest"
-//                        bat "docker push ${DOCKER_IMAGE_BASE}:${env.VERSION}"
-//                        bat "docker push ${DOCKER_IMAGE_BASE}:latest"
-//                    }
-//                }
-//            }
-//        }
+        stage('Tag & Push Docker Image') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
+                        sh "docker push shalomeli/world_of_games:1.0"
+                    } else {
+                        bat "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
+                        bat "docker push shalomeli/world_of_games:1.0"
+                    }
+                }
+            }
+        }
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
