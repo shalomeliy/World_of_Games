@@ -2,7 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'shalomeliy/main_score:1.0'
+        DOCKER_IMAGE = 'shalomeliy/main_score'
+        DOCKER_REGISTRY = 'https://hub.docker.com/repository/docker/shalomeliy/world_of_games/tags'
+        VERSION = 'latest' // Default version, will be updated in the pipeline
     }
 
     stages {
@@ -22,7 +24,6 @@ pipeline {
                 }
             }
         }
-       
         stage('Install Requirements') {
             steps {
                 dir('World_of_Games') {
@@ -36,14 +37,32 @@ pipeline {
                 }
             }
         }
+        stage('Get Latest Tag and Set Version') {
+            steps {
+                script {
+                    // Fetch the latest tag from Docker Hub
+                    def latestTag = sh(script: 'curl -s $DOCKER_REGISTRY | grep -oP "tag-name-\\K[0-9]+\\.[0-9]+"' , returnStdout: true).trim()
+                    
+                    // Increment the tag version by 0.1
+                    def newVersion = latestTag.toFloat() + 0.1
+                    env.VERSION = String.format('%.1f', newVersion)
+                    
+                    echo "New VERSION set to: ${env.VERSION}"
+                }
+            }
+        }
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
                     script {
                         if (isUnix()) {
                             sh "docker-compose up --build -d"
+                            // Tag the built image as latest
+                            sh "docker tag $DOCKER_IMAGE:$VERSION $DOCKER_IMAGE:latest"
                         } else {
                             bat "docker-compose up --build -d"
+                            // Tag the built image as latest
+                            bat "docker tag $DOCKER_IMAGE:$VERSION $DOCKER_IMAGE:latest"
                         }
                     }
                 }
@@ -53,11 +72,11 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        sh "docker push shalomeli/world_of_games:1.0"
+                        sh "docker tag $DOCKER_IMAGE:latest $NEW_IMAGE"
+                        sh "docker push $NEW_IMAGE"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        bat "docker push shalomeli/world_of_games:1.0"
+                        bat "docker tag $DOCKER_IMAGE:latest $NEW_IMAGE"
+                        bat "docker push $NEW_IMAGE"
                     }
                 }
             }
