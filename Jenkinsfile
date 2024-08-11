@@ -37,23 +37,22 @@ pipeline {
                 }
             }
         }
-       stage('Get Latest Tag and Set Version') {
+      stage('Get Latest Tag and Set Version') {
         steps {
             script {
                 try {
-                    def tagOutput = sh(script: 'curl -s https://hub.docker.com/repository/docker/shalomeliy/world_of_games/tags', returnStdout: true).trim()
-                    def latestTag = tagOutput.find(/tag-name-(\d+\.\d+)/)
-                    if (latestTag) {
-                        env.DOCKER_TAG = latestTag
-                    } else {
-                        error "No tags found for the Docker image."
-                    }
+                    def response = sh(script: 'curl -s https://hub.docker.com/v2/repositories/shalomeliy/world_of_games/tags/', returnStdout: true).trim()
+                    echo "Docker Hub response: ${response}"
+                    def tags = readJSON(text: response)
+                    def latestTag = tags.results[0]?.name ?: 'latest'
+                    echo "Latest tag: ${latestTag}"
+                    env.DOCKER_IMAGE_TAG = latestTag
                 } catch (Exception e) {
                     error "Failed to get the latest Docker tag: ${e.message}"
                 }
             }
-            }
         }
+    }
 
         stage('Build Docker') {
             steps {
