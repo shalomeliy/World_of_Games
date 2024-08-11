@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'shalomeliy/main_score'
-        DOCKER_REGISTRY = 'https://hub.docker.com/repository/docker/shalomeliy/world_of_games/tags'
+        DOCKER_REGISTRY = 'https://hub.docker.com/repository/docker/shalomeli/world_of_games/tags'
         VERSION = 'latest' // Default version, will be updated in the pipeline
     }
 
