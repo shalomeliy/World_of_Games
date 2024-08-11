@@ -22,22 +22,7 @@ pipeline {
                 }
             }
         }
-        stage('Print Disk Space') {
-            steps {
-                script {
-                    if (!isUnix()) {
-                        def scriptText = '''
-                        $disk = Get-PSDrive -Name C
-                        Write-Output "Free space on C: $([math]::round($disk.Free/1GB, 2)) GB"
-                        '''
-                        writeFile file: 'diskfree.ps1', text: scriptText
-                        bat 'powershell.exe -File diskfree.ps1'
-                    } else {
-                        sh 'df -h'
-                    }
-                }
-            }
-        }
+       
         stage('Install Requirements') {
             steps {
                 dir('World_of_Games') {
