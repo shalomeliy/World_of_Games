@@ -28,6 +28,7 @@ def test_scores():
         return True
     else:
         driver_chrome.quit()  # Close the browser if the score is invalid
+        print ("The score is greater than 1000")
         return False
 
 # Main function to execute the test and return an appropriate exit code
