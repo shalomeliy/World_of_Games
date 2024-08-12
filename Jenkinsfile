@@ -22,20 +22,6 @@ pipeline {
                 }
             }
         }
- 
-        stage('Install Requirements') {
-            steps {
-                dir('World_of_Games') {
-                    script {
-                        if (isUnix()) {
-                            sh "pip install -r requirements.txt"
-                        } else {
-                            bat "pip install -r requirements.txt"
-                        }
-                    }
-                }
-            }
-        }
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
