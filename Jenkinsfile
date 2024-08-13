@@ -46,7 +46,6 @@ pipeline {
         }
         stage('Build Docker') {
             steps {
-                dir('World_of_Games') {
                     script {
                         if (isUnix()) {
                             sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose up --build -d"
@@ -56,7 +55,7 @@ pipeline {
                     }
                 }
             }
-        }
+        
  
         stage('Tag & Push Docker Image') {
             steps {
