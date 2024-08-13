@@ -26,12 +26,31 @@ pipeline {
         stage('Read Version') {
             steps {
                 script {
-                    def version = readFile(VERSION_FILE).trim()
-                    env.IMAGE_VERSION = version
-                    echo "Current version is ${env.IMAGE_VERSION}"
+                    def versionFile = new File(VERSION_FILE)
+            
+                    if (versionFile.exists()) {
+                        // File exists, read the version
+                        def version = readFile(VERSION_FILE).trim()
+                        if (version.isEmpty()) {
+                            // File exists but is empty, set it to "1"
+                            writeFile(file: VERSION_FILE, text: "1")
+                            env.IMAGE_VERSION = "1"
+                            echo "Version file was empty. Updated file with version ${env.IMAGE_VERSION}"
+                        } else {
+                            // File exists and has a value
+                            env.IMAGE_VERSION = version
+                            echo "Current version is ${env.IMAGE_VERSION}"
+                        }
+                    } else {
+                        // File does not exist, create it with value "1"
+                        writeFile(file: VERSION_FILE, text: "1")
+                        env.IMAGE_VERSION = "1"
+                        echo "Version file did not exist. Created new file with version ${env.IMAGE_VERSION}"
+                    }
                 }
             }
         }
+
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
