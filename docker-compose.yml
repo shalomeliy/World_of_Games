@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: shalomeliy/main_score:1.0
+    image: shalomeliy/main_score:${IMAGE_VERSION}
     ports:
       - "8777:5000"
     volumes:
