@@ -23,32 +23,7 @@ pipeline {
                 }
             }
         }
-       stage('Read Version') {
-    steps {
-        script {
-            // Check if the file exists using Jenkins pipeline steps
-            if (fileExists(VERSION_FILE)) {
-                def version = readFile(VERSION_FILE).trim()
-                if (version.isEmpty()) {
-                    // File exists but is empty, set to "1" and write back
-                    writeFile(file: VERSION_FILE, text: "1")
-                    env.IMAGE_VERSION = "1"
-                    echo "Version file was empty. Updated file with version ${env.IMAGE_VERSION}"
-                } else {
-                    // File exists and has content
-                    env.IMAGE_VERSION = version
-                    echo "Current version is ${env.IMAGE_VERSION}"
-                }
-            } else {
-                // File does not exist, create it with version "1"
-                writeFile(file: VERSION_FILE, text: "1")
-                env.IMAGE_VERSION = "1"
-                echo "Version file did not exist. Created new file with version ${env.IMAGE_VERSION}"
-            }
-        }
-    }
-}
-
+   
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
