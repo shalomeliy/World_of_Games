@@ -34,7 +34,7 @@ pipeline {
                     }
                 }
             }
- stage('Build Docker') {
+stage('Build Docker') {
     steps {
         dir('World_of_Games') {
             script {
@@ -44,13 +44,13 @@ pipeline {
                     sh "docker-compose up -d"
                 } else {
                     bat "set IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
-                    echo "Version3 is ${env.IMAGE_VERSION}"
                     bat "docker-compose up -d"
                 }
             }
         }
     }
 }
+
 stage('Verify Tags') {
     steps {
         script {
