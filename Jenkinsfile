@@ -38,13 +38,13 @@ pipeline {
     steps {
         dir('World_of_Games') {
             script {
+                echo "Version2 is ${env.IMAGE_VERSION}"
                 if (isUnix()) {
                     sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
-                    echo "Versionme is ${env.IMAGE_VERSION}"
                     sh "docker-compose up -d"
                 } else {
                     bat "set IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
-                    echo "Versionme is ${env.IMAGE_VERSION}"
+                    echo "Version3 is ${env.IMAGE_VERSION}"
                     bat "docker-compose up -d"
                 }
             }
