@@ -46,27 +46,18 @@ pipeline {
             }
         }
         stage('Build Docker') {
-    steps {
-        dir('World_of_Games') {
-            script {
-                if (isUnix()) {
-                    sh "ls -al" // List files to verify docker-compose.yml is present
-                    sh """
-                    export IMAGE_VERSION=${env.IMAGE_VERSION}
-                    docker-compose up --build -d
-                    """
-                } else {
-                    bat "dir" // List files to verify docker-compose.yml is present
-                    bat """
-                    set IMAGE_VERSION=${env.IMAGE_VERSION}
-                    docker-compose up --build -d
-                    """
+            steps {
+            dir('World_of_Games') {
+                script {
+                    if (isUnix()) {
+                        sh "docker-compose up -d"
+                  } else {
+                        bat "docker-compose up -d"
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
         stage('Tag & Push Docker Image') {
             steps {
                 script {
