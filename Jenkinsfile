@@ -33,21 +33,35 @@ pipeline {
                     }
                 }
             }
-stage('Build Docker') {
-    steps {
-        dir('World_of_Games') {
-            script {
-                if (isUnix()) {
-                    sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
-                    sh "docker-compose up -d"
-                } else {
-                    bat "set IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
-                    bat "docker-compose up -d"
+pipeline {
+    agent any
+
+    stages {
+        stage('Build Docker') {
+            steps {
+                dir('World_of_Games') {
+                    script {
+                        echo "Building Docker image with version: ${env.IMAGE_VERSION}"
+                        if (isUnix()) {
+                            sh """
+                            export IMAGE_VERSION=${env.IMAGE_VERSION}
+                            docker-compose build
+                            docker-compose up -d
+                            """
+                        } else {
+                            bat """
+                            set IMAGE_VERSION=${env.IMAGE_VERSION}
+                            docker-compose build
+                            docker-compose up -d
+                            """
+                        }
+                    }
                 }
             }
         }
     }
 }
+
 
 stage('Verify Tags') {
     steps {
