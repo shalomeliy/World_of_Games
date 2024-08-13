@@ -1,3 +1,4 @@
+
 services:
   flask-app:
     build:
@@ -8,4 +9,3 @@ services:
       - "8777:5000"
     volumes:
       - "./scores.txt:/scores.txt"
-
