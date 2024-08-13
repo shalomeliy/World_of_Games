@@ -45,38 +45,49 @@ pipeline {
                 }}
             }
         }
-       stage('Build Docker') {
+ stage('Build Docker') {
     steps {
         dir('World_of_Games') {
             script {
                 if (isUnix()) {
-                   
+                    sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
                     sh "docker-compose up -d"
                 } else {
-                    
-                    bat "docker images"
+                    bat "set IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
                     bat "docker-compose up -d"
-                    bat "docker images"
                 }
             }
         }
     }
 }
-
-        stage('Tag & Push Docker Image') {
-            steps {
-                script {
-                    def imageVersion = env.IMAGE_VERSION
-                    if (isUnix()) {
-                        sh "docker tag ${DOCKER_IMAGE_BASE}:${imageVersion} ${DOCKER_IMAGE_BASE}:${imageVersion}"
-                        sh "docker push ${DOCKER_IMAGE_BASE}:${imageVersion}"
-                    } else {
-                        bat "docker tag ${DOCKER_IMAGE_BASE}:${imageVersion} ${DOCKER_IMAGE_BASE}:${imageVersion}"
-                        bat "docker push ${DOCKER_IMAGE_BASE}:${imageVersion}"
-                    }
-                }
+stage('Verify Tags') {
+    steps {
+        script {
+            if (isUnix()) {
+                sh "docker images"
+            } else {
+                bat "docker images"
             }
         }
+    }
+}
+
+stage('Tag & Push Docker Image') {
+    steps {
+        script {
+            def imageVersion = env.IMAGE_VERSION
+            if (isUnix()) {
+                // Tag the existing image with the correct version
+                sh "docker tag shalomeliy/main_score:1.0 shalomeliy/main_score:${imageVersion}"
+                sh "docker push shalomeliy/main_score:${imageVersion}"
+            } else {
+                bat "docker tag shalomeliy/main_score:1.0 shalomeliy/main_score:${imageVersion}"
+                bat "docker push shalomeliy/main_score:${imageVersion}"
+            }
+        }
+    }
+}
+
         stage('Increment Version') {
             steps {
                 script {
