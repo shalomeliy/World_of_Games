@@ -25,14 +25,24 @@ pipeline {
             }
         }
 
-        stage('Read Version') {
+       stage('Read and increase version Number') {
             steps {
-                dir('World_of_Games') {
-                    script {
-                        def version = readFile(VERSION_FILE).trim() 
-                        env.IMAGE_VERSION = version // Store the version in an environment variable
-                        echo "Current version: ${env.IMAGE_VERSION}"
+                script {
+                    def version_File = 'World_Of_Games/version.txt'
+                    
+                    // Read current version number
+                    def currentVersionNumber = 0
+                    currentVersionNumber = readFile(version_File).trim().toInteger()
                     }
+                    
+                    // Increment the version number
+                    def newVersionNumber = currentVersionNumber + 1
+                    
+                    // Write the new version number back to the file
+                    writeFile file: version_File, text: "${newVersionNumber}"
+                    
+                    // Set the new Version number as an env. variable for Docker tag
+                    env.IMAGE_VERSION = newVersionNumber.toString()
                 }
             }
         }
