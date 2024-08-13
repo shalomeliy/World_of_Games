@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'shalomeliy/main_score'
+        VERSION_FILE = 'version.txt'
+        DOCKER_IMAGE_BASE = 'shalomeliy/main_score'
     }
 
     stages {
@@ -24,11 +25,10 @@ pipeline {
         }
         stage('Read Version') {
             steps {
-                dir('World_of_Games') {
-                    script {
-                        version = readFile('version.txt').trim()
-                        echo "Current version is ${version}"
-                    }
+                script {
+                    def version = readFile(VERSION_FILE).trim()
+                    env.IMAGE_VERSION = version
+                    echo "Current version is ${env.IMAGE_VERSION}"
                 }
             }
         }
@@ -48,42 +48,23 @@ pipeline {
         stage('Tag & Push Docker Image') {
             steps {
                 script {
+                    def imageVersion = env.IMAGE_VERSION
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE:${version} shalomeli/world_of_games:${version}"
-                        sh "docker push shalomeli/world_of_games:${version}"
+                        sh "docker tag ${DOCKER_IMAGE_BASE}:${imageVersion} ${DOCKER_IMAGE_BASE}:${imageVersion}"
+                        sh "docker push ${DOCKER_IMAGE_BASE}:${imageVersion}"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE:${version} shalomeli/world_of_games:${version}"
-                        bat "docker push shalomeli/world_of_games:${version}"
+                        bat "docker tag ${DOCKER_IMAGE_BASE}:${imageVersion} ${DOCKER_IMAGE_BASE}:${imageVersion}"
+                        bat "docker push ${DOCKER_IMAGE_BASE}:${imageVersion}"
                     }
                 }
             }
         }
         stage('Increment Version') {
             steps {
-                dir('World_of_Games') {
-                    script {
-                        def newVersion = version.toInteger() + 1
-                        writeFile file: 'version.txt', text: newVersion.toString()
-                        echo "New version is ${newVersion}"
-                        // Commit and push the new version to the repository
-                        if (isUnix()) {
-                            sh """
-                                git config user.name "Jenkins"
-                                git config user.email "jenkins@example.com"
-                                git add version.txt
-                                git commit -m "Bump version to ${newVersion}"
-                                git push origin main
-                            """
-                        } else {
-                            bat """
-                                git config user.name "Jenkins"
-                                git config user.email "jenkins@example.com"
-                                git add version.txt
-                                git commit -m "Bump version to ${newVersion}"
-                                git push origin main
-                            """
-                        }
-                    }
+                script {
+                    def version = readFile(VERSION_FILE).trim().toInteger() + 1
+                    writeFile file: VERSION_FILE, text: version.toString()
+                    echo "Incremented version to ${version}"
                 }
             }
         }
@@ -123,4 +104,3 @@ pipeline {
         }
     }
 }
-
