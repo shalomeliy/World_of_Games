@@ -78,10 +78,10 @@ stage('Tag & Push Docker Image') {
             def imageVersion = env.IMAGE_VERSION
             if (isUnix()) {
                 // Tag the existing image with the correct version
-                sh "docker tag shalomeliy/main_score:1.0 shalomeliy/main_score:${imageVersion}"
+               // sh "docker tag shalomeliy/main_score:1.0 shalomeliy/main_score:${imageVersion}"
                 sh "docker push shalomeliy/main_score:${imageVersion}"
             } else {
-                bat "docker tag shalomeliy/main_score:1.0 shalomeliy/main_score:${imageVersion}"
+               // bat "docker tag shalomeliy/main_score:1.0 shalomeliy/main_score:${imageVersion}"
                 bat "docker push shalomeliy/main_score:${imageVersion}"
             }
         }
