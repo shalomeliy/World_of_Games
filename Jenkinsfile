@@ -78,11 +78,13 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
+                        sh "docker tag ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ${DOCKER_IMAGE_BASE}:latest"
                         sh "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
+                        sh "docker push ${DOCKER_IMAGE_BASE}:latest"
                     } else {
-                        bat "docker tag ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
+                        bat "docker tag ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ${DOCKER_IMAGE_BASE}:latest"
                         bat "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
+                        bat "docker push ${DOCKER_IMAGE_BASE}:latest"
                     }
                 }
             }
