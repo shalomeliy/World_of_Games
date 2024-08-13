@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'shalomeliy/main_score:1.0'
+        DOCKER_IMAGE = 'shalomeliy/main_score'
     }
 
     stages {
@@ -18,6 +18,16 @@ pipeline {
                         sh "git clone https://github.com/shalomeliy/World_of_Games.git"
                     } else {
                         bat "git clone https://github.com/shalomeliy/World_of_Games.git"
+                    }
+                }
+            }
+        }
+        stage('Read Version') {
+            steps {
+                dir('World_of_Games') {
+                    script {
+                        version = readFile('version.txt').trim()
+                        echo "Current version is ${version}"
                     }
                 }
             }
@@ -39,11 +49,40 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        sh "docker push shalomeli/world_of_games:1.0"
+                        sh "docker tag $DOCKER_IMAGE:${version} shalomeli/world_of_games:${version}"
+                        sh "docker push shalomeli/world_of_games:${version}"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        bat "docker push shalomeli/world_of_games:1.0"
+                        bat "docker tag $DOCKER_IMAGE:${version} shalomeli/world_of_games:${version}"
+                        bat "docker push shalomeli/world_of_games:${version}"
+                    }
+                }
+            }
+        }
+        stage('Increment Version') {
+            steps {
+                dir('World_of_Games') {
+                    script {
+                        def newVersion = version.toInteger() + 1
+                        writeFile file: 'version.txt', text: newVersion.toString()
+                        echo "New version is ${newVersion}"
+                        // Commit and push the new version to the repository
+                        if (isUnix()) {
+                            sh """
+                                git config user.name "Jenkins"
+                                git config user.email "jenkins@example.com"
+                                git add version.txt
+                                git commit -m "Bump version to ${newVersion}"
+                                git push origin main
+                            """
+                        } else {
+                            bat """
+                                git config user.name "Jenkins"
+                                git config user.email "jenkins@example.com"
+                                git add version.txt
+                                git commit -m "Bump version to ${newVersion}"
+                                git push origin main
+                            """
+                        }
                     }
                 }
             }
@@ -84,3 +123,4 @@ pipeline {
         }
     }
 }
+
