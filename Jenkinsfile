@@ -80,12 +80,12 @@ stage('Build Docker') {
                 script {
                     def imageVersion = env.IMAGE_VERSION
                     if (isUnix()) {
-                        sh "docker tag ${DOCKER_IMAGE_BASE}:${imageVersion} ${DOCKER_IMAGE_BASE}:latest"
-                        sh "docker push ${DOCKER_IMAGE_BASE}:${imageVersion}"
+                        sh "docker tag ${DOCKER_IMAGE_BASE}:${IMAGE_VERSION} ${DOCKER_IMAGE_BASE}:latest"
+                        sh "docker push ${DOCKER_IMAGE_BASE}:${IMAGE_VERSION}"
                         sh "docker push ${DOCKER_IMAGE_BASE}:latest"
                     } else {
-                        bat "docker tag ${DOCKER_IMAGE_BASE}:${imageVersion} ${DOCKER_IMAGE_BASE}:latest"
-                        bat "docker push ${DOCKER_IMAGE_BASE}:${imageVersion}"
+                        bat "docker tag ${DOCKER_IMAGE_BASE}:${IMAGE_VERSION} ${DOCKER_IMAGE_BASE}:latest"
+                        bat "docker push ${DOCKER_IMAGE_BASE}:${IMAGE_VERSION}"
                         bat "docker push ${DOCKER_IMAGE_BASE}:latest"
                     }
                 }
