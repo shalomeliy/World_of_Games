@@ -105,8 +105,18 @@ pipeline {
                 }
             }
         }
-
- 
+        stage('Push Docker Image') {
+                steps {
+                    script {
+                        // Tag and push the Docker image with the new build number
+                         if (isUnix()) {
+                             sh "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
+                         } else {
+                        bat "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
+                    }
+                }
+            }
+        }
         stage('Finalize') {
             steps {
                 dir('World_of_Games') {
