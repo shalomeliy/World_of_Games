@@ -29,7 +29,6 @@ pipeline {
                 script {
                         def version = readFile(VERSION_FILE).trim() 
                         env.IMAGE_VERSION = version // Store the version in an environment variable
-                        echo "Version is ${env.IMAGE_VERSION}"
                         }
                     }
                 }
@@ -38,7 +37,6 @@ stage('Build Docker') {
     steps {
         dir('World_of_Games') {
             script {
-                echo "Version2 is ${env.IMAGE_VERSION}"
                 if (isUnix()) {
                     sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
                     sh "docker-compose up -d"
