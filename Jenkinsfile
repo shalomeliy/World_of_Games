@@ -76,6 +76,20 @@ pipeline {
             }
         }
 
+               stage('E2E Test') {
+            steps {
+                dir('World_of_Games') {
+                    script {
+                            if (isUnix()) {
+                                sh 'python tests/e2e.py'
+                            } else {
+                                bat 'python tests/e2e.py'
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Tag & Push Docker Image') {
             steps {
                 script {
@@ -92,20 +106,7 @@ pipeline {
             }
         }
 
-        stage('E2E Test') {
-            steps {
-                dir('World_of_Games') {
-                    script {
-                            if (isUnix()) {
-                                sh 'python tests/e2e.py'
-                            } else {
-                                bat 'python tests/e2e.py'
-                        }
-                    }
-                }
-            }
-        }
-
+ 
         stage('Finalize') {
             steps {
                 dir('World_of_Games') {
