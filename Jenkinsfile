@@ -50,10 +50,10 @@ pipeline {
         dir('World_of_Games') {
             script {
                 if (isUnix()) {
-                    sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
+                   
                     sh "docker-compose up -d"
                 } else {
-                    bat "set IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose build"
+                    
                     bat "docker images"
                     bat "docker-compose up -d"
                     bat "docker images"
