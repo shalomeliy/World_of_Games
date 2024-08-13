@@ -31,7 +31,7 @@ pipeline {
                     script {
                         def version = readFile(VERSION_FILE).trim() 
                         env.IMAGE_VERSION = version // Store the version in an environment variable
-                        echo "Read version: ${env.IMAGE_VERSION}"
+                        echo "Current version: ${env.IMAGE_VERSION}"
                     }
                 }
             }
