@@ -54,6 +54,7 @@ pipeline {
                             sh "docker build -t ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ."
                         } else {
                             bat "docker build -t ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ."
+                            bat "docker images"
                         }
                     }
                 }
@@ -68,6 +69,7 @@ pipeline {
                             sh "docker-compose up -d"
                         } else {
                             bat "docker-compose up -d"
+                            bat "docker ps"
                         }
                     }    
                 }
