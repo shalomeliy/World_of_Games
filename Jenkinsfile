@@ -33,10 +33,7 @@ pipeline {
                     }
                 }
             }
-pipeline {
-    agent any
 
-    stages {
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
