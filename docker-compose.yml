@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   flask-app:
-    image: shalomeliy/main_score:${IMAGE_TAG}
+    image: shalomeliy/main_score:${env.IMAGE_VERSION}
     ports:
       - "8777:5000"
     volumes:
