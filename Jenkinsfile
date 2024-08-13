@@ -23,20 +23,41 @@ pipeline {
                 }
             }
         }
-   
+        stage('Read Version') {
+            steps {
+                script {
+                    if (fileExists(VERSION_FILE)) {
+                        def version = readFile(VERSION_FILE).trim()
+                        if (version.isEmpty()) {
+                            writeFile(file: VERSION_FILE, text: "1")
+                            env.IMAGE_VERSION = "1"
+                            echo "Version file was empty. Updated file with version ${env.IMAGE_VERSION}"
+                        } else {
+                            env.IMAGE_VERSION = version
+                            echo "Current version is ${env.IMAGE_VERSION}"
+                        }
+                    } else {
+                        writeFile(file: VERSION_FILE, text: "1")
+                        env.IMAGE_VERSION = "1"
+                        echo "Version file did not exist. Created new file with version ${env.IMAGE_VERSION}"
+                    }
+                }
+            }
+        }
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
                     script {
                         if (isUnix()) {
-                            sh "docker-compose up --build -d"
+                            sh "export IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose up --build -d"
                         } else {
-                            bat "docker-compose up --build -d"
+                            bat "set IMAGE_VERSION=${env.IMAGE_VERSION} && docker-compose up --build -d"
                         }
                     }
                 }
             }
         }
+ 
         stage('Tag & Push Docker Image') {
             steps {
                 script {
