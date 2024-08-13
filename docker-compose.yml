@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   flask-app:
-    image: "shalomeliy/main_score:${IMAGE_VERSION:-latest}"  # Use IMAGE_VERSION, default to 'latest' if not set
+    image: "shalomeliy/main_score:${IMAGE_VERSION}"  # Use IMAGE_VERSION value
     ports:
       - "8777:5000"
     volumes:
