@@ -37,28 +37,31 @@ pipeline {
             }
         }
 
-        stage('Build Docker') {
-            steps {
-                dir('World_of_Games') {
-                    script {
-                        echo "Building Docker image with version: ${env.IMAGE_VERSION}"
-                        if (isUnix()) {
-                            sh """
-                            export IMAGE_VERSION=${env.IMAGE_VERSION}
-                            docker-compose build
-                            docker-compose up -d
-                            """
-                        } else {
-                            bat """
-                            set IMAGE_VERSION=${env.IMAGE_VERSION}
-                            docker-compose build
-                            docker-compose up -d
-                            """
-                        }
-                    }
+stage('Build Docker') {
+    steps {
+        dir('World_of_Games') {
+            script {
+                echo "Building Docker image with version: ${env.IMAGE_VERSION}"
+                if (isUnix()) {
+                    sh """
+                    export IMAGE_VERSION=${env.IMAGE_VERSION}
+                    export DOCKER_IMAGE_BASE=${env.DOCKER_IMAGE_BASE}
+                    docker-compose build
+                    docker-compose up -d
+                    """
+                } else {
+                    bat """
+                    set IMAGE_VERSION=${env.IMAGE_VERSION}
+                    set DOCKER_IMAGE_BASE=${env.DOCKER_IMAGE_BASE}
+                    docker-compose build
+                    docker-compose up -d
+                    """
                 }
             }
         }
+    }
+}
+
 
         stage('Verify Tags') {
             steps {
