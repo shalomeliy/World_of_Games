@@ -25,6 +25,7 @@ pipeline {
         }
         stage('Read Version') {
             steps {
+                dir('World_of_Games') {
                 script {
                     if (fileExists(VERSION_FILE)) {
                         def version = readFile(VERSION_FILE).trim()
@@ -41,7 +42,7 @@ pipeline {
                         env.IMAGE_VERSION = "1"
                         echo "Version file did not exist. Created new file with version ${env.IMAGE_VERSION}"
                     }
-                }
+                }}
             }
         }
         stage('Build Docker') {
