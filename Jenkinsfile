@@ -53,11 +53,11 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        sh "docker push shalomeli/world_of_games:1.0"
+                        sh "docker tag $DOCKER_IMAGE shalomeli/main_score:1.0"
+                        sh "docker push shalomeli/main_score:1.0"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE shalomeli/world_of_games:1.0"
-                        bat "docker push shalomeli/world_of_games:1.0"
+                        bat "docker tag $DOCKER_IMAGE shalomeli/main_score:1.0"
+                        bat "docker push shalomeli/main_score:1.0"
                     }
                 }
             }
