@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         VERSION_FILE = 'World_of_Games/version.txt'
-        DOCKER_IMAGE_BASE = 'shalomeliy/main_score'
+        DOCKER_IMAGE_BASE = 'shalomeliy/World_Of_Games'
     }
 
     stages {
