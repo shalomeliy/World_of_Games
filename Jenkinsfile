@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         VERSION_FILE = 'World_of_Games/version.txt'
-        DOCKER_IMAGE_BASE = 'shalomeliy/gorld_of_games'
+        DOCKER_IMAGE_BASE = 'shalomeliy/world_of_games'
     }
 
     stages {
@@ -114,7 +114,7 @@ pipeline {
                          if (isUnix()) {
                              sh "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
                         } else {
-                             bat "docker push ${DOCKER_IMAGE_BASE}:${IMAGE_TAG}"
+                             bat "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_TAG}"
                     }
                 }
             }
