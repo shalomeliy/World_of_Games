@@ -39,8 +39,10 @@ pipeline {
                     
                     // Set the new version number as an env. variable for Docker tag
                     env.IMAGE_VERSION = newVersionNumber.toString()
+                    env.IMAGE_TAG = newBuildNumber.toString()
                     
                     echo "Updated version to: ${env.IMAGE_VERSION}"
+                    
                 }
             }
         }
@@ -112,7 +114,7 @@ pipeline {
                          if (isUnix()) {
                              sh "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
                         } else {
-                            bat "docker push shalomeliy/world_of_games:${env.IMAGE_VERSION}"
+                             bat "docker push ${DOCKER_IMAGE_BASE}:${IMAGE_TAG}"
                     }
                 }
             }
