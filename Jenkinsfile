@@ -39,7 +39,7 @@ pipeline {
                     
                     // Set the new version number as an env. variable for Docker tag
                     env.IMAGE_VERSION = newVersionNumber.toString()
-                    env.IMAGE_TAG = newBuildNumber.toString()
+                    env.IMAGE_TAG = newVersionNumber.toString()
                     
                     echo "Updated version to: ${env.IMAGE_VERSION}"
                     
