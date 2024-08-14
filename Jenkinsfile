@@ -112,7 +112,7 @@ pipeline {
                          if (isUnix()) {
                              sh "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
                         } else {
-                            bat "docker push shalomeliy/World_Of_Games:${env.IMAGE_VERSION}"
+                            bat "docker push shalomeliy/world_of_games:${env.IMAGE_VERSION}"
                     }
                 }
             }
