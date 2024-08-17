@@ -18,12 +18,12 @@ def score_server():
         # If the file does not exist, create it
         with open(scores_file, 'w') as file:
             file.write("")  # Create an empty file
-        score = "No score data available yet."
+        score = "1"
 
     # Check if the file is readable and read the score
     if os.access(scores_file, os.R_OK):
         with open(scores_file, 'r') as file:
-            score = file.read().strip() or "No score data available."
+            score = file.read().strip() or "1"
 
     # Return HTML content based on the file status
     if score:
