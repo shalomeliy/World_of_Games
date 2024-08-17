@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'shalomeliy/main_score:latest'
+        IMAGE_VERSION = 1.0
     }
 
     stages {
