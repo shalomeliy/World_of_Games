@@ -110,9 +110,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker push ${IMAGE_NAME_TAG}:${IMAGE_TAG}"
+                        sh "docker push shalomeli/main_score:${IMAGE_TAG}"
                     } else {
-                        bat "docker push ${IMAGE_NAME_TAG}:${IMAGE_TAG}"
+                        bat "docker push shalomeli/main_score:${IMAGE_TAG}"
                     }
                 }
             }
