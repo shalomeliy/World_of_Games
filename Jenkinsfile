@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'shalomeliy/main_score:latest'
+        DOCKER_IMAGE = 'shalomeliy/main_score'
         IMAGE_VERSION = 1.0
     }
 
@@ -72,11 +72,11 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE"
-                        sh "docker push $DOCKER_IMAGE"
+                        sh "docker tag $DOCKER_IMAGE:$IMAGE_VERSION"
+                        sh "docker push $DOCKER_IMAGE:$IMAGE_VERSION"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE"
-                        bat "docker push $DOCKER_IMAGE"
+                        bat "docker tag $DOCKER_IMAGE:$IMAGE_VERSION"
+                        bat "docker push $DOCKER_IMAG:$IMAGE_VERSIONE"
                     }
                 }
             }
