@@ -7,11 +7,11 @@ pipeline {
     }
 
     stages {
-        stage('Clean Up') {
-            steps {
-                deleteDir()
-            }
-        }
+    //    stage('Clean Up') {
+      //      steps {
+        //        deleteDir()
+      //      }
+        //}
         stage('Clone Repo') {
             steps {
                 script {
