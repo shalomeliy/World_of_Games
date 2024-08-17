@@ -40,7 +40,7 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'shalomeli', passwordVariable: 'Es120213!')]) {
+                    withCredentials([usernamePassword(credentialsId: '27b5d903-83f4-4e88-bf7c-58d9b75a3245', usernameVariable: 'shalomeli', passwordVariable: 'Es120213!')]) {
                         if (isUnix()) {
                             sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                         } else {
