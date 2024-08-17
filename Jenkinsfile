@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Install Requirements') {
             steps {
                 dir('World_of_Games') {
@@ -36,6 +36,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'shalomeli', passwordVariable: 'Es120213!')]) {
+                        if (isUnix()) {
+                            sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                        } else {
+                            // For Windows, use direct login command
+                            bat "docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%"
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
@@ -50,6 +66,7 @@ pipeline {
                 }
             }
         }
+
         stage('Tag & Push Docker Image') {
             steps {
                 script {
@@ -63,6 +80,7 @@ pipeline {
                 }
             }
         }
+
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
@@ -78,6 +96,7 @@ pipeline {
                 }
             }
         }
+
         stage('Finalize') {
             steps {
                 dir('World_of_Games') {
