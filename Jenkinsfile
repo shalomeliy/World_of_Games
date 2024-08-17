@@ -52,15 +52,18 @@ pipeline {
                 }
             }
         }
-        stage('Docker Compose Up') {
+       stage('Docker Compose Up') {
             steps {
-                script {
-                    dir('World-Of-Games') {
-                        bat "docker-compose up -d"
+                dir('World_of_Games') {
+                    script {
+                        if (isUnix()) {
+                            sh "docker-compose up -d"
+                        } else {
+                            bat "docker-compose up -d"
+                        }
                     }
                 }
             }
-        }
         
         stage('E2E Test') {
             steps {
