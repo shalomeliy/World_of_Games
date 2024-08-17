@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy Python and requirements files from the current directory to the container /app folder
 COPY *.py .
 COPY requirements.txt .
+COPY scores.txt .
 
 # Install flask
 RUN pip install flask
