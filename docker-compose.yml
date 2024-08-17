@@ -2,7 +2,7 @@
 
 services:
   flask-app:
-    image: ${IMAGE_NAME_TAG}:latest  # Use IMAGE_VERSION value
+    image: ${IMAGE_NAME_TAG}:${IMAGE_TAG}  # Use IMAGE_VERSION value
     ports:
       - "8777:5000"
     volumes:
