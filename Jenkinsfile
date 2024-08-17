@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME_TAG = 'shalomeliy/main_score'
-        IMAGE_TAG = '1.0' // Define IMAGE_TAG to be used in the Build Docker stage
+        // IMAGE_TAG will be set dynamically in the pipeline
     }
 
     stages {
@@ -19,6 +19,30 @@ pipeline {
                         sh "git clone https://github.com/shalomeliy/World_of_Games.git"
                     } else {
                         bat "git clone https://github.com/shalomeliy/World_of_Games.git"
+                    }
+                }
+            }
+        }
+        
+        stage('Get Current Version') {
+            steps {
+                dir('World_of_Games') {
+                    script {
+                        def versionFile = readFile('version.txt').trim()
+                        env.IMAGE_TAG = versionFile
+                    }
+                }
+            }
+        }
+        
+        stage('Increment Version') {
+            steps {
+                dir('World_of_Games') {
+                    script {
+                        def versionFile = readFile('version.txt').trim()
+                        def newVersion = (versionFile.toInteger() + 1).toString()
+                        writeFile file: 'version.txt', text: newVersion
+                        env.IMAGE_TAG = newVersion
                     }
                 }
             }
@@ -115,3 +139,4 @@ pipeline {
         }
     }
 }
+
