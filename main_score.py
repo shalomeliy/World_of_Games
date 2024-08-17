@@ -5,9 +5,6 @@ import utils
 import os
 
 
-print("Current Working Directory:", os.getcwd())
-print("Scores File Path:", os.path.abspath('scores.txt'))
-
 app = Flask(__name__)
 
 @app.route("/")
