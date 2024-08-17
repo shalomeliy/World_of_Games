@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'shalomeliy/main_score'
-        IMAGE_VERSION = 1.0
+        IMAGE_VERSION = '1.0'
     }
 
     stages {
@@ -41,12 +41,11 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: '27b5d903-83f4-4e88-bf7c-58d9b75a3245', DOCKER_USERNAME: 'shalomeli', DOCKER_PASSWORD: 'Es120213!')]) {
+                    withCredentials([usernamePassword(credentialsId: '27b5d903-83f4-4e88-bf7c-58d9b75a3245', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         if (isUnix()) {
                             sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                         } else {
-                            // For Windows, use direct login command
-                            bat "docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%"
+                            bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
                         }
                     }
                 }
@@ -72,11 +71,11 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker tag $DOCKER_IMAGE:$IMAGE_VERSION"
+                        sh "docker tag $DOCKER_IMAGE:$IMAGE_VERSION $DOCKER_IMAGE:$IMAGE_VERSION"
                         sh "docker push $DOCKER_IMAGE:$IMAGE_VERSION"
                     } else {
-                        bat "docker tag $DOCKER_IMAGE:$IMAGE_VERSION"
-                        bat "docker push $DOCKER_IMAG:$IMAGE_VERSIONE"
+                        bat "docker tag $DOCKER_IMAGE:$IMAGE_VERSION $DOCKER_IMAGE:$IMAGE_VERSION"
+                        bat "docker push $DOCKER_IMAGE:$IMAGE_VERSION"
                     }
                 }
             }
