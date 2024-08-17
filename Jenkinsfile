@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VERSION_FILE = 'World_of_Games/version.txt'
-        DOCKER_IMAGE_BASE = 'shalomeliy/world_of_games'
+        DOCKER_IMAGE = 'shalomeliy/main_score:1.0'
     }
 
     stages {
@@ -12,7 +11,6 @@ pipeline {
                 deleteDir()
             }
         }
-
         stage('Clone Repo') {
             steps {
                 script {
@@ -24,36 +22,26 @@ pipeline {
                 }
             }
         }
-
-        stage('Read and Increase Version Number') {
+ 
+        stage('Install Requirements') {
             steps {
-                script {
-                    // Read current version number
-                    def currentVersionNumber = readFile(VERSION_FILE).trim().toInteger()
-
-                    // Increment the version number
-                    def newVersionNumber = currentVersionNumber + 1
-                    
-                    // Write the new version number back to the file
-                    writeFile file: VERSION_FILE, text: "${newVersionNumber}"
-                    
-                    // Set the new version number as an env. variable for Docker tag
-                    env.IMAGE_VERSION = newVersionNumber.toString()
-                    env.IMAGE_TAG = newVersionNumber.toString()
-                    
-                    echo "Updated version to: ${env.IMAGE_VERSION}"
-                    
+                dir('World_of_Games') {
+                    script {
+                        if (isUnix()) {
+                            sh "pip install -r requirements.txt"
+                        } else {
+                            bat "pip install -r requirements.txt"
+                        }
+                    }
                 }
             }
         }
-
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
                     script {
-                        echo "Building Docker image with version: ${env.IMAGE_VERSION}"
                         if (isUnix()) {
-                            sh "docker build -t ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ."
+                            sh "docker-compose up --build -d"
                         } else {
                             bat "docker-compose up --build -d"
                             bat "docker ps -a"
@@ -62,23 +50,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Docker Compose Up') {
-            steps {
-                dir('World_of_Games') {
-                    script {
-                        if (isUnix()) {
-                            sh "docker-compose up -d"
-                        } else {
-                            bat "docker-compose up -d"
-                            bat "docker ps"
-                        }
-                    }    
-                }
-            }
-        }
-
-               stage('E2E Test') {
         stage('Tag & Push Docker Image') {
             steps {
                 script {
@@ -96,24 +67,13 @@ pipeline {
             steps {
                 dir('World_of_Games') {
                     script {
+                        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                             if (isUnix()) {
                                 sh 'python tests/e2e.py'
                             } else {
                                 bat 'python tests/e2e.py'
+                            }
                         }
-                    }
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-                steps {
-                    script {
-                        // Tag and push the Docker image with the new build number
-                         if (isUnix()) {
-                             sh "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION}"
-                        } else {
-                             bat "docker push ${DOCKER_IMAGE_BASE}:${env.IMAGE_TAG}"
                     }
                 }
             }
