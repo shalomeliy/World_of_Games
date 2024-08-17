@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   flask-app:
-    image: ${DOCKER_IMAGE_BASE}:${IMAGE_VERSION}  # Use IMAGE_VERSION value
+    image: ${DOCKER_IMAGE}  # Use IMAGE_VERSION value
     ports:
       - "8777:5000"
     volumes:
