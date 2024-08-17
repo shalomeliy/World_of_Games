@@ -43,6 +43,10 @@ pipeline {
                         def newVersion = (versionFile.toInteger() + 1).toString()
                         writeFile file: 'version.txt', text: newVersion
                         env.IMAGE_TAG = newVersion
+
+                         // Debug: Print the new version
+                        def updatedVersionFile = readFile('version.txt').trim()
+                        echo "Updated version in file: ${updatedVersionFile}"
                     }
                 }
             }
