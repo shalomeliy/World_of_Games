@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route("/")
 def score_server():
     # Initialize the score variable with a default value
-    score = "100"
+    score = "0"
 
     # Define the path to the scores file
     scores_file = 'scores.txt'
@@ -17,13 +17,13 @@ def score_server():
     if not os.path.isfile(scores_file):
         # If the file does not exist, create it
         with open(scores_file, 'w') as file:
-            file.write("")  # Create an empty file
-        score = "1"
+            file.write("0")  # Create a new file with score zero
+        
 
     # Check if the file is readable and read the score
     if os.access(scores_file, os.R_OK):
         with open(scores_file, 'r') as file:
-            score = file.read().strip() or "1"
+            score = file.read().strip() 
 
     # Return HTML content based on the file status
     if score:
