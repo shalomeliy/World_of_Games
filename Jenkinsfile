@@ -55,13 +55,19 @@ pipeline {
                         if (isUnix()) {
                             sh "docker build -t ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ."
                         } else {
+<<<<<<< HEAD
                             bat "docker build -t ${DOCKER_IMAGE_BASE}:${env.IMAGE_VERSION} ."
                             bat "docker images"
+=======
+                            bat "docker-compose up --build -d"
+                            bat "docker ps -a"
+>>>>>>> main
                         }
                     }
                 }
             }
         }
+<<<<<<< HEAD
 
         stage('Docker Compose Up') {
             steps {
@@ -79,6 +85,22 @@ pipeline {
         }
 
                stage('E2E Test') {
+=======
+        stage('Tag & Push Docker Image') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh "docker tag $DOCKER_IMAGE shalomeli/main_score:1.0"
+                        sh "docker push shalomeli/main_score:1.0"
+                    } else {
+                        bat "docker tag $DOCKER_IMAGE shalomeli/main_score:1.0"
+                        bat "docker push shalomeli/main_score:1.0"
+                    }
+                }
+            }
+        }
+        stage('E2E Test') {
+>>>>>>> main
             steps {
                 dir('World_of_Games') {
                     script {
