@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def score_server():
-    # Initialize the score variable with a default message
-    score = "Score data is not available."
+    # Initialize the score variable with a default value
+    score = "100"
 
     # Define the path to the scores file
     scores_file = 'scores.txt'
