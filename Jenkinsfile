@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME_TAG = 'shalomeliy/main_score'
+        IMAGE_NAME_TAG = 'shalomeli/world_of_games'
         // IMAGE_TAG will be set dynamically in the pipeline
     }
 
