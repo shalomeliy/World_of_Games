@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME_TAG = 'shalomeliy/main_score'
-        IMAGE_NAME = 'main_score'
-        
+        IMAGE_TAG = '1.0' // Define IMAGE_TAG to be used in the Build Docker stage
     }
 
     stages {
@@ -24,7 +23,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Install Requirements') {
             steps {
                 dir('World_of_Games') {
@@ -38,6 +37,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker') {
             steps {
                 dir('World_of_Games') {
@@ -45,16 +45,16 @@ pipeline {
                         if (isUnix()) {
                             sh "docker build -t ${IMAGE_NAME_TAG}:${IMAGE_TAG} ."
                         } else {
-        
                             bat "docker build -t ${IMAGE_NAME_TAG}:${IMAGE_TAG} ."
                         }
                     }
                 }
             }
         }
-       stage('Docker Compose Up') {
+
+        stage('Docker Compose Up') {
             steps {
-                dir('World_of_Games') {
+                dir('World_of_Games') { // Ensure directory name matches the clone repo stage
                     script {
                         if (isUnix()) {
                             sh "docker-compose up -d"
@@ -64,7 +64,8 @@ pipeline {
                     }
                 }
             }
-        
+        }
+
         stage('E2E Test') {
             steps {
                 dir('World_of_Games') {
@@ -80,6 +81,7 @@ pipeline {
                 }
             }
         }
+
         stage('Tag & Push Docker Image') {
             steps {
                 script {
@@ -91,6 +93,7 @@ pipeline {
                 }
             }
         }
+
         stage('Finalize') {
             steps {
                 dir('World_of_Games') {
